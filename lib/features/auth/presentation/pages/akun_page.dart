@@ -7,7 +7,7 @@ import '../../../../core/widgets/common_widgets.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import 'login_page.dart';
 
-/// Akun: profil singkat dan tombol keluar.
+/// Halaman akun dengan profil dan menu bantuan pengguna.
 class AkunPage extends StatelessWidget {
   const AkunPage({super.key});
 
@@ -21,16 +21,44 @@ class AkunPage extends StatelessWidget {
     );
   }
 
+  void _pesanMenu(BuildContext context, String judul) {
+    pesan(context, '$judul belum tersedia di aplikasi.');
+  }
+
+  Widget _menuItem(
+    BuildContext context, {
+    required IconData ikon,
+    required String judul,
+    VoidCallback? onTap,
+  }) =>
+      SizedBox(
+        height: 52,
+        child: InkWell(
+          onTap: onTap ?? () => _pesanMenu(context, judul),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Row(children: [
+              Icon(ikon, size: 20, color: AppColors.ink),
+              const SizedBox(width: 18),
+              Expanded(
+                child: Text(
+                  judul,
+                  style: sans(14, weight: FontWeight.w700, color: AppColors.ink),
+                ),
+              ),
+            ]),
+          ),
+        ),
+      );
+
+  Widget _pemisah() => const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Divider(height: 16, color: AppColors.slate200),
+      );
+
   @override
   Widget build(BuildContext context) {
     final authVm = Injection.get<AuthViewModel>();
-
-    const menu = [
-      (Icons.bookmark_border, 'Buku Tersimpan'),
-      (Icons.notifications_none, 'Notifikasi'),
-      (Icons.support_agent, 'Hubungi Paguyuban Kios'),
-      (Icons.privacy_tip_outlined, 'Kebijakan Privasi'),
-    ];
 
     return ListenableBuilder(
       listenable: authVm,
@@ -39,48 +67,62 @@ class AkunPage extends StatelessWidget {
         return Column(children: [
           const WilisHeader(title: 'Akun'),
           Expanded(
-            child: ListView(padding: const EdgeInsets.fromLTRB(16, 24, 16, 24), children: [
-              const Center(child: AvatarAsset('assets/images/avatar_saya.png', size: 88)),
-              const SizedBox(height: 12),
-              Center(child: Text(user.nama, style: serif(22))),
-              if (user.email.isNotEmpty) ...[
-                const SizedBox(height: 2),
-                Center(child: Text(user.email, style: sans(13, color: AppColors.muted))),
-              ],
-              const SizedBox(height: 24),
-              SoftCard(
-                radius: 18,
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Column(children: [
-                  for (var i = 0; i < menu.length; i++) ...[
-                    if (i > 0) const Divider(height: 1, indent: 16, endIndent: 16, color: AppColors.sky200),
-                    Material(
-                      color: Colors.transparent,
-                      child: ListTile(
-                        leading: Icon(menu[i].$1, color: AppColors.primary),
-                        title: Text(menu[i].$2, style: sans(14, weight: FontWeight.w600, color: AppColors.ink)),
-                        trailing: const Icon(Icons.chevron_right, color: AppColors.muted),
-                        onTap: () => pesan(context, '${menu[i].$2} belum tersedia di prototipe.'),
+            child: ListView(
+              padding: const EdgeInsets.only(bottom: 24),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 12, 20, 18),
+                  child: Row(children: [
+                    CircleAvatar(
+                      radius: 32,
+                      backgroundColor: const Color(0xFFD1D5DB),
+                      child: const Icon(Icons.person, size: 42, color: Colors.white),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(user.nama, style: sans(15, weight: FontWeight.w800, color: AppColors.ink)),
+                          if (user.email.isNotEmpty) ...[
+                            const SizedBox(height: 3),
+                            Text(
+                              user.email,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: sans(12.5, color: AppColors.muted),
+                            ),
+                          ],
+                        ],
                       ),
                     ),
-                  ],
-                ]),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                height: 48,
-                child: OutlinedButton.icon(
-                  onPressed: () => _keluar(context),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.like,
-                    side: const BorderSide(color: AppColors.like),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                  ),
-                  icon: const Icon(Icons.logout, size: 18),
-                  label: Text('Keluar', style: sans(14.5, weight: FontWeight.w700, color: AppColors.like)),
+                  ]),
                 ),
-              ),
-            ]),
+                _menuItem(context, ikon: Icons.favorite_border, judul: 'Wishlist'),
+                _menuItem(context, ikon: Icons.person_outline, judul: 'Akun'),
+                _menuItem(context, ikon: Icons.star_border, judul: 'Ulasan Produk'),
+                _pemisah(),
+                _menuItem(context, ikon: Icons.chat_bubble_outline, judul: 'Live Chat'),
+                _menuItem(context, ikon: Icons.info_outline, judul: 'Info Berbelanja'),
+                _menuItem(context, ikon: Icons.arrow_circle_right_outlined, judul: 'Syarat & Ketentuan'),
+                _menuItem(context, ikon: Icons.verified_user_outlined, judul: 'Kebijakan Privasi'),
+                _menuItem(context, ikon: Icons.star_outline, judul: 'Beri Rating Aplikasi'),
+                _pemisah(),
+                _menuItem(context, ikon: Icons.store_outlined, judul: 'Toko Saya'),
+                _pemisah(),
+                _menuItem(
+                  context,
+                  ikon: Icons.logout,
+                  judul: 'Keluar Akun',
+                  onTap: () => _keluar(context),
+                ),
+                const SizedBox(height: 28),
+                Center(
+                  child: Text('Versi 1.0.0 (1)', style: sans(12, color: const Color(0xFF94A3B8))),
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
           ),
         ]);
       },
