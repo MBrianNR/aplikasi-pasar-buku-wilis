@@ -121,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                     ]),
                     const SizedBox(height: 18),
                     _TombolSosial(
-                      onTap: _masukSosial,
+                      onTap: () => pesan(context, 'Masuk dengan Google belum tersedia.'),
                       leading: const GoogleG(size: 22),
                       text: 'Masuk dengan Google',
                     ),
