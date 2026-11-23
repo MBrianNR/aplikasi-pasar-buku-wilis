@@ -61,8 +61,37 @@ class _BerandaPageState extends State<BerandaPage> {
     return n == null ? k.eksemplar : '${formatRibuan(n)} eks';
   }
 
+  List<KategoriRingkas> get _kategoriRingkasDariKatalog {
+    if (!_stokVm.termuat) return _kategoriRingkasList;
+
+    // Pilihan kategori kosong tetap tersedia agar bisa diisi kemudian.
+    final hasil = _kategoriRingkasList.toList();
+    final kategoriTersedia = hasil
+        .expand((kategori) => kategori.kategoriApi)
+        .map((nama) => nama.trim().toLowerCase())
+        .toSet();
+    final namaKategori = _stokVm.buku
+        .map((buku) => buku.kategori.trim())
+        .where((nama) => nama.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+
+    for (final nama in namaKategori) {
+      if (kategoriTersedia.contains(nama.toLowerCase())) continue;
+      hasil.add(KategoriRingkas(
+        nama,
+        'Koleksi kategori $nama',
+        '0 eks',
+        4,
+        kategoriApi: [nama],
+      ));
+    }
+    return hasil;
+  }
+
   String _teksUnggulan() {
-    final n = _stokVm.jumlah(const ['Novel']);
+    final n = _stokVm.jumlah(const ['Novel & Sastra']);
     return n == null
         ? '2.410+ Buku Tersedia'
         : '${formatRibuan(n)} Buku Tersedia';
@@ -456,7 +485,7 @@ class _BerandaPageState extends State<BerandaPage> {
                 style: sans(18, weight: FontWeight.w700, color: AppColors.ink)),
             const SizedBox(width: 8),
             Expanded(
-                child: Text('7 Lorong Tematik',
+                child: Text('${_kategoriRingkasDariKatalog.length} Kategori',
                     style: sans(12.5, color: AppColors.muted))),
             GestureDetector(
               onTap: () => widget.onNavigate(NavTab.kategori),
@@ -519,7 +548,7 @@ class _BerandaPageState extends State<BerandaPage> {
   Widget _gridKategori() => LayoutBuilder(builder: (context, c) {
         final lebar = (c.maxWidth - 12) / 2;
         return Wrap(spacing: 12, runSpacing: 12, children: [
-          for (final k in _kategoriRingkasList)
+          for (final k in _kategoriRingkasDariKatalog)
             SizedBox(
               width: lebar,
               child: GestureDetector(

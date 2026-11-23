@@ -48,14 +48,46 @@ class _KategoriPageState extends State<KategoriPage> {
     return n == null ? k.jumlah : '${formatRibuan(n)} ${k.satuan}';
   }
 
+  List<KategoriTematik> get _kategoriDariKatalog {
+    if (!_stokVm.termuat) return _kategoriTematikList;
+
+    // Pertahankan pilihan kosong; tambahkan kategori API yang belum dikenal.
+    final hasil = _kategoriTematikList.toList();
+    final kategoriTersedia = hasil
+        .expand((kategori) => kategori.kategoriApi)
+        .map((nama) => nama.trim().toLowerCase())
+        .toSet();
+    final namaKategori = _stokVm.buku
+        .map((buku) => buku.kategori.trim())
+        .where((nama) => nama.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+
+    for (final nama in namaKategori) {
+      if (kategoriTersedia.contains(nama.toLowerCase())) continue;
+      hasil.add(KategoriTematik(
+        label: nama.toUpperCase(),
+        jumlah: '0 Buku',
+        nama: nama,
+        deskripsi: 'Katalog buku dengan kategori $nama di Pasar Buku Wilis.',
+        lorong: 'Kategori dari web admin',
+        gambar: 'assets/images/kategori_8.png',
+        kategoriApi: [nama],
+      ));
+    }
+    return hasil;
+  }
+
   List<KategoriTematik> get _daftar {
+    final kategori = _kategoriDariKatalog;
     switch (_tabAktif) {
       case 1:
-        return _kategoriTematikList.where((k) => _populer.contains(k.label)).toList();
+        return kategori.where((k) => _populer.contains(k.label)).toList();
       case 2:
-        return _kategoriTematikList.where((k) => _langka.contains(k.label)).toList();
+        return kategori.where((k) => _langka.contains(k.label)).toList();
       default:
-        return _kategoriTematikList;
+        return kategori;
     }
   }
 

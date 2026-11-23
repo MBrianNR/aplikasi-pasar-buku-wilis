@@ -28,7 +28,10 @@ class StokKategoriViewModel extends ChangeNotifier {
   }
 
   List<Buku> bukuUntuk(List<String> kategori) =>
-      _buku.where((b) => kategori.contains(b.kategori)).toList();
+      _buku
+          .where((b) => kategori.any(
+              (nama) => nama.trim().toLowerCase() == b.kategori.trim().toLowerCase()))
+          .toList();
 
   void mulaiPantau({Duration setiap = const Duration(seconds: 10)}) {
     _pemantau++;

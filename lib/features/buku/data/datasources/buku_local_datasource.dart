@@ -10,7 +10,7 @@ abstract class BukuLocalDataSource {
 class BukuLocalDataSourceImpl implements BukuLocalDataSource {
   static const _kategoriRingkas = [
     KategoriRingkas('Buku Pelajaran', 'SD, SMP, SMA &...', '1.820 eks', 0,
-        kategoriApi: ['Pelajaran']),
+        kategoriApi: ['Buku Pelajaran']),
     KategoriRingkas('Kuliah & Teknik', 'Kedokteran, Hukum,...', '940 eks', 1,
         kategoriApi: ['Kuliah']),
     KategoriRingkas('Kamus Bahasa', 'Belanda, Jawa Kuno,...', '430 eks', 2,
@@ -20,7 +20,7 @@ class BukuLocalDataSourceImpl implements BukuLocalDataSource {
         kategoriApi: ['Komik']),
     KategoriRingkas(
         'Agama & Filsafat', 'Kitab Kuning, Tasawuf,...', '610 eks', 4,
-        kategoriApi: ['Agama']),
+        kategoriApi: ['Agama & Kitab']),
     KategoriRingkas('Majalah Antik', 'Tempo 70–an, Star...', '320 eks', 5,
         kategoriApi: ['Majalah']),
   ];
@@ -84,7 +84,7 @@ class BukuLocalDataSourceImpl implements BukuLocalDataSource {
           'Pramoedya Ananta Toer, Mochtar Lubis, Balai Pustaka, & novel roman...',
       lorong: 'Lorong Blok A & B',
       gambar: 'assets/images/kategori_1.png',
-      kategoriApi: ['Novel'],
+      kategoriApi: ['Novel & Sastra'],
     ),
     KategoriTematik(
       label: 'STUDI',
@@ -94,7 +94,7 @@ class BukuLocalDataSourceImpl implements BukuLocalDataSource {
           'SD, SMP, SMA, Kurikulum Merdeka hingga edisi buku paket lawas yang...',
       lorong: 'Lorong Blok B',
       gambar: 'assets/images/kategori_2.png',
-      kategoriApi: ['Pelajaran'],
+      kategoriApi: ['Buku Pelajaran'],
     ),
     KategoriTematik(
       label: 'AKADEMIK',
@@ -134,7 +134,7 @@ class BukuLocalDataSourceImpl implements BukuLocalDataSource {
           'Filsafat Islam, Tasawuf Al-Ghazali, Nahwu-Shorof, kitab gandul pegon...',
       lorong: 'Lorong Blok A & C',
       gambar: 'assets/images/kategori_6.png',
-      kategoriApi: ['Agama'],
+      kategoriApi: ['Agama & Kitab'],
     ),
     KategoriTematik(
       label: 'PERIODIK',
@@ -155,7 +155,7 @@ class BukuLocalDataSourceImpl implements BukuLocalDataSource {
           'Babad Tanah Jawi, arsip masa kolonial Malang, dokumen peta kuno, &...',
       lorong: 'Lorong Blok C Kolektor',
       gambar: 'assets/images/kategori_8.png',
-      kategoriApi: ['Langka'],
+      kategoriApi: ['Buku Langka & Antik'],
       satuan: 'Koleksi',
     ),
   ];
