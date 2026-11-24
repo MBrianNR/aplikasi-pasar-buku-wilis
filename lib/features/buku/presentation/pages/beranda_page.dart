@@ -128,7 +128,7 @@ class _BerandaPageState extends State<BerandaPage> {
       info: '${buku.jumlah} eksemplar tersedia',
       judul: buku.judul,
       penulis: buku.penulis,
-      harga: 'Tanyakan harga di kios',
+      harga: buku.harga > 0 ? 'Rp ${formatRibuan(buku.harga)}' : 'Tanyakan harga di kios',
       kios: kios,
       kategori: buku.kategori,
       penerbit: 'Tidak dicantumkan',
