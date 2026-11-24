@@ -121,7 +121,7 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                mainAxisExtent: 370,
+                mainAxisExtent: 270,
               ),
               itemBuilder: (context, index) =>
                   _kartuBukuGrid(buku[index], buku),
@@ -130,7 +130,6 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
   }
 
   Widget _kartuBukuGrid(Buku b, List<Buku> daftarBuku) {
-    final tipis = b.jumlah < _menipis;
     final detailBuku = _ubahKeBukuTemuan(b);
     final rekomendasi = daftarBuku
         .where((item) => item.judul != b.judul)
@@ -154,16 +153,22 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 3 / 4,
+            SizedBox(
+              height: 165,
               child: ColoredBox(
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: BukuCover(
-                    source: b.coverUrl ?? _gambarUntukKategori(b.kategori),
-                    fallbackAsset: _gambarUntukKategori(b.kategori),
-                    fit: BoxFit.contain,
+                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: 3 / 4,
+                      child: BukuCover(
+                        source:
+                            b.coverUrl ?? _gambarUntukKategori(b.kategori),
+                        fallbackAsset: _gambarUntukKategori(b.kategori),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -188,7 +193,7 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
                       overflow: TextOverflow.ellipsis,
                       style: sans(11.5, color: AppColors.muted),
                     ),
-                    const Spacer(),
+                    const SizedBox(height: 10),
                     Text(
                       b.harga > 0
                           ? 'Rp ${formatRibuan(b.harga)}'
@@ -198,25 +203,6 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
                       style: sans(11.5,
                           weight: FontWeight.w700, color: AppColors.primary),
                     ),
-                    const SizedBox(height: 3),
-                    Text(
-                      '${b.jumlah} eks. tersedia${tipis ? ' • Stok menipis' : ''}',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: sans(10.5,
-                          weight: tipis ? FontWeight.w700 : FontWeight.w500,
-                          color:
-                              tipis ? Colors.orange.shade800 : AppColors.muted),
-                    ),
-                    if (b.pemasok.isNotEmpty) ...[
-                      const SizedBox(height: 2),
-                      Text(
-                        b.pemasok,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: sans(10, color: AppColors.muted),
-                      ),
-                    ],
                   ],
                 ),
               ),
