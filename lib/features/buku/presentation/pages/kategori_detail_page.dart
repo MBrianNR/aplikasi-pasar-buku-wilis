@@ -156,11 +156,15 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
           children: [
             AspectRatio(
               aspectRatio: 3 / 4,
-              child: SizedBox(
-                width: double.infinity,
-                child: BukuCover(
-                  source: b.coverUrl ?? _gambarUntukKategori(b.kategori),
-                  fallbackAsset: _gambarUntukKategori(b.kategori),
+              child: ColoredBox(
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: BukuCover(
+                    source: b.coverUrl ?? _gambarUntukKategori(b.kategori),
+                    fallbackAsset: _gambarUntukKategori(b.kategori),
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
