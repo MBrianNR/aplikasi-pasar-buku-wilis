@@ -113,12 +113,114 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
               ),
             )
           else
-            for (final b in buku)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _kartuBuku(b, buku),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: buku.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                mainAxisExtent: 370,
               ),
+              itemBuilder: (context, index) =>
+                  _kartuBukuGrid(buku[index], buku),
+            ),
         ]);
+  }
+
+  Widget _kartuBukuGrid(Buku b, List<Buku> daftarBuku) {
+    final tipis = b.jumlah < _menipis;
+    final detailBuku = _ubahKeBukuTemuan(b);
+    final rekomendasi = daftarBuku
+        .where((item) => item.judul != b.judul)
+        .map(_ubahKeBukuTemuan)
+        .toList();
+
+    return Material(
+      color: const Color(0xFFF1F9FE),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: const BorderSide(color: AppColors.sky200),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => DetailBukuPage(
+            buku: detailBuku,
+            rekomendasi: rekomendasi,
+          ),
+        )),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 3 / 4,
+              child: SizedBox(
+                width: double.infinity,
+                child: BukuCover(
+                  source: b.coverUrl ?? _gambarUntukKategori(b.kategori),
+                  fallbackAsset: _gambarUntukKategori(b.kategori),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      b.judul,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: sans(13,
+                          weight: FontWeight.w700, color: AppColors.ink),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      b.penulis,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: sans(11.5, color: AppColors.muted),
+                    ),
+                    const Spacer(),
+                    Text(
+                      b.harga > 0
+                          ? 'Rp ${formatRibuan(b.harga)}'
+                          : 'Tanya harga di kios',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: sans(11.5,
+                          weight: FontWeight.w700, color: AppColors.primary),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${b.jumlah} eks. tersedia${tipis ? ' • Stok menipis' : ''}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: sans(10.5,
+                          weight: tipis ? FontWeight.w700 : FontWeight.w500,
+                          color:
+                              tipis ? Colors.orange.shade800 : AppColors.muted),
+                    ),
+                    if (b.pemasok.isNotEmpty) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        b.pemasok,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: sans(10, color: AppColors.muted),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _kartuBuku(Buku b, List<Buku> daftarBuku) {
@@ -177,7 +279,10 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
                   color: tipis ? warnaTipis : AppColors.ink),
             ),
             const SizedBox(height: 2),
-            Text(b.harga > 0 ? 'Rp ${formatRibuan(b.harga)}' : 'Tanya harga di kios',
+            Text(
+                b.harga > 0
+                    ? 'Rp ${formatRibuan(b.harga)}'
+                    : 'Tanya harga di kios',
                 style: sans(12, color: AppColors.body)),
             if (tipis)
               Padding(
@@ -198,7 +303,8 @@ class _KategoriDetailPageState extends State<KategoriDetailPage> {
         info: b.tanggal.isEmpty ? 'Stok ${b.jumlah} tersedia' : b.tanggal,
         judul: b.judul,
         penulis: b.penulis,
-        harga: b.harga > 0 ? 'Rp ${formatRibuan(b.harga)}' : 'Tanya harga di kios',
+        harga:
+            b.harga > 0 ? 'Rp ${formatRibuan(b.harga)}' : 'Tanya harga di kios',
         kios: b.pemasok.isEmpty ? 'Pasar Buku Wilis' : b.pemasok,
         kategori: b.kategori,
         penerbit: b.pemasok.isEmpty ? 'Tidak dicantumkan' : b.pemasok,
