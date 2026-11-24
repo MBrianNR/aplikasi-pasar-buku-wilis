@@ -20,7 +20,7 @@ class BukuRemoteDataSourceImpl implements BukuRemoteDataSource {
     const dariEnv = String.fromEnvironment('API_URL');
     final server = dariEnv.isNotEmpty
         ? dariEnv.replaceAll(RegExp(r'/+$'), '')
-        : 'https://backend-production-79a17ed4.up.railway.app';
+        : 'https://admin-pasar-buku-wilis-zp6q.vercel.app';
     return server.endsWith('/api') ? server : '$server/api';
   }
 
