@@ -653,22 +653,33 @@ class _BerandaPageState extends State<BerandaPage> {
                     const SizedBox(height: 8),
                     const Divider(height: 1),
                     const SizedBox(height: 8),
-                    Row(children: [
-                      Expanded(
-                        child: Text(b.harga,
-                            style: sans(13.5,
-                                weight: FontWeight.w800, color: AppColors.ink)),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 7, vertical: 3),
-                        decoration: BoxDecoration(
-                            color: AppColors.slate100,
-                            borderRadius: BorderRadius.circular(6)),
-                        child: Text(b.kios,
+                    Text(
+                      b.harga,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: sans(13.5,
+                          weight: FontWeight.w800,
+                          color: AppColors.ink,
+                          height: 1.2),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      Flexible(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 7, vertical: 3),
+                          decoration: BoxDecoration(
+                              color: AppColors.slate100,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text(
+                            b.kios,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: sans(10,
                                 weight: FontWeight.w600,
-                                color: AppColors.body)),
+                                color: AppColors.body),
+                          ),
+                        ),
                       ),
                     ]),
                   ]),
