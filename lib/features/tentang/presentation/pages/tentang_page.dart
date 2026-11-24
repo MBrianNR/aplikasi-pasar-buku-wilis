@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -24,6 +25,24 @@ class _TentangPageState extends State<TentangPage> {
     super.initState();
     _faqList = Injection.get<GetFaqUseCase>().execute();
     _fasilitasList = Injection.get<GetFasilitasPengunjungUseCase>().execute();
+  }
+
+  Future<void> _bukaPetunjukArah() async {
+    final uri = Uri.parse('https://maps.app.goo.gl/PmdhDB72oY4wXox16');
+    try {
+      final terbuka = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!terbuka) {
+        final fallbackTerbuka =
+            await launchUrl(uri, mode: LaunchMode.platformDefault);
+        if (!fallbackTerbuka && mounted) {
+          pesan(context, 'Tidak dapat membuka Google Maps. Periksa browser atau koneksi internet.');
+        }
+      }
+    } catch (_) {
+      if (mounted) {
+        pesan(context, 'Tidak dapat membuka Google Maps. Periksa browser atau koneksi internet.');
+      }
+    }
   }
 
   @override
@@ -175,7 +194,7 @@ class _TentangPageState extends State<TentangPage> {
           PrimaryButton(
             text: 'Petunjuk Arah (Maps)',
             icon: Icons.directions_outlined,
-            onPressed: () => pesan(context, 'Membuka petunjuk arah ke Pasar Buku Wilis (simulasi).'),
+            onPressed: _bukaPetunjukArah,
           ),
           const SizedBox(height: 4),
         ]),
