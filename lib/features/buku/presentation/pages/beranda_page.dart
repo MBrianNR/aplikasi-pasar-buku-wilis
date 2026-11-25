@@ -659,7 +659,7 @@ class _BerandaPageState extends State<BerandaPage> {
                       overflow: TextOverflow.ellipsis,
                       style: sans(13.5,
                           weight: FontWeight.w800,
-                          color: AppColors.ink,
+                          color: AppColors.primary,
                           height: 1.2),
                     ),
                     const SizedBox(height: 6),
